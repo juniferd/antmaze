@@ -9,3 +9,4 @@ run the maze
 ```
 python MAZE/app.py
 ```
+see the [ant maze](http://antius.blastic.us/) in action

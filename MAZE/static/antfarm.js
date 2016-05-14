@@ -13,6 +13,20 @@ var antColors = {}
 var antNames = ['picard','riker','la forge','worf','crusher','troi','data','wesley','o\'brien','guinan','q','ro']
 var antIds = { }
 
+var foodTip = d3.select("body")
+    .append("div")
+    .attr('class','tooltip')
+    .style("position", "absolute")
+    .style("z-index", "11")
+    .style("visibility", "hidden")
+    .text("this is the food source");
+
+var markerTip = d3.select('body')
+    .append("div")
+    .attr('class','tooltip')
+    .style("position", "absolute")
+    .style("z-index", "11")
+    .style("visibility", "hidden");
 
 
 function setAntName(antid){
@@ -86,6 +100,7 @@ function setAnts(data){
 }
 function setMarkers(markers,visited){
     
+
     var marker = svg.selectAll('.marker')
         .data(markers);
     
@@ -115,9 +130,26 @@ function setMarkers(markers,visited){
                 
             }
         }).attr('fill-opacity',0.5)
-        .on('mouseover', function(d){
-            console.log(d.pos+', '+d.antid+', '+d.s+', '+d.c)
+        .on('mouseover',function(d){
+            
+            markerTip.style('visibility','visible')
+                .style('opacity','1')
+                .style("top",(d3.event.pageY-10)+"px")
+                .style("left",(d3.event.pageX+10)+"px")
+                .html('ant: <strong>'+antIds[d.antid]
+                    +'</strong><br/>chemical: <strong>'+d.c
+                    +'</strong><br/>strength: <strong>'+d.s+'</strong>');
+        })
+        .on("mousemove", function(){
+            markerTip.style("top",(d3.event.pageY-10)+"px")
+                .style("left",(d3.event.pageX+10)+"px");
+        })
+        .on('mouseout',function(){
+            markerTip.style('opacity','0')
+                .style('visibility','hidden')
+                .style('pointer-events', 'none');
         });
+
 
     marker.exit().remove();
 
@@ -141,50 +173,7 @@ function setMarkers(markers,visited){
         }
     });
 }
-/*function setText(dataText, totalRooms, dataCopyAnts){
-    
-    var textVisited = d3.select('g.panel').selectAll('text.text-visited')
-        .data(dataText);
 
-    textVisited.enter()
-        .append('text')
-        .attr('class','text-visited')
-        .attr('dy','240')
-
-    textVisited
-        .html(function(d){
-            var percentage = parseInt(parseInt(d) / parseInt(totalRooms) * 100)
-            return '<tspan>explored:</tspan>'
-            +'<tspan text-anchor="end" x="140px">'+percentage+'%</tspan>'
-        });
-    textVisited.exit().remove();
-
-    var antText = d3.select('g.panel').selectAll('text.side')
-        .data(dataCopyAnts)
-    
-    antText.enter()
-        .append('text')
-        .attr('class','side')
-        .attr('transform', function(d,i){
-            num = 20 + (20 * i)
-            return 'translate(0,'+ num +')'
-        }).attr('font-size','12')
-        .attr('fill',function(d){
-            return antColors[d.antid]
-        })
-
-    antText.html(function(d){
-            var antName = antIds[d.antid]
-            var antMode = d.mode
-            var hasFood = ''
-            if (d.has_food){
-                hasFood = ' \u2605'
-            }
-            return '<tspan>'+antName+':</tspan>'
-            +'<tspan text-anchor="end" x="140px">'+antMode+hasFood+'</tspan>'
-        });
-    antText.exit().remove();   
-}*/
 function setFood(data){
     var food = svg.selectAll('.food')
         .data(data);
@@ -204,6 +193,19 @@ function setFood(data){
         .attr('height',10)
         .attr('fill','red')
         .attr('fill-opacity',0.25)
+        .on('mouseover',function(){
+            foodTip.style('visibility','visible')
+                .style('opacity','1');
+        })
+        .on("mousemove", function(){
+            foodTip.style("top",(d3.event.pageY-10)+"px")
+                .style("left",(d3.event.pageX+10)+"px");
+        })
+        .on('mouseout',function(){
+            foodTip.style('opacity','0')
+                .style('visibility','hidden')
+                .style('pointer-events', 'none');
+        })
 
     food.transition()
         .duration(TURN_SPEED)

@@ -540,5 +540,5 @@ class Maze(object):
         
         for y in range(0,n):
             for x in range(0,n):
-                print viz[(x,y)],
+                print unicode(viz[(x,y)]).encode('utf-8'),
             print '\n'

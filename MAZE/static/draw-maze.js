@@ -17,12 +17,18 @@ var Maze = {
         console.log(d)
     },
     'drawTile' : function(tile){
+        if (tile.fill == '#dddddd'){
+            thisopacity = '0'
+        } else {
+            thisopacity = '1'
+        }
         svg.append('rect')
             .attr('x',tile.x)
             .attr('y',tile.y)
             .attr('width',tile.width)
             .attr('height',tile.height)
             .attr('fill',tile.fill)
+            .attr('fill-opacity',thisopacity)
             .attr('class',function(){
                 if (tile.class){
                     return tile.class
